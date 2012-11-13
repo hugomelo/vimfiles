@@ -442,8 +442,8 @@ nmap <leader>ew :e <C-R>=expand("%:p:h")."/"<CR>
 nmap <leader>es :sp <C-R>=expand("%:p:h")."/"<CR>
 nmap <leader>ev :vsp <C-R>=expand("%:p:h")."/"<CR>
 
-"faster file switching
-nnoremap <leader><leader> <c-^>
+"faster alternate file switching
+nnoremap <leader>a <c-^>
 
 "clipboard copy/paste
 map <leader>yy "+yy
@@ -541,7 +541,7 @@ function! PromoteToLet()
   :normal ==
 endfunction
 :command! PromoteToLet :call PromoteToLet()
-:map <leader>p :PromoteToLet<cr>
+:map <leader>tp :PromoteToLet<cr>
 
 function! OpenTestAlternate()
   let new_file = AlternateForCurrentFile()
@@ -568,13 +568,12 @@ function! AlternateForCurrentFile()
   endif
   return new_file
 endfunction
-nnoremap <leader>. :call OpenTestAlternate()<cr>
+nnoremap <leader>t. :call OpenTestAlternate()<cr>
 
 map <leader>t :call RunTestFile()<cr>
-map <leader>T :call RunNearestTest()<cr>
-map <leader>a :call RunTests('')<cr>
-map <leader>c :w\|:!script/features<cr>
-map <leader>w :w\|:!script/features --profile wip<cr>
+map <leader>ta :call RunTests('')<cr>
+map <leader>tc :w\|:!script/features<cr>
+map <leader>tw :w\|:!script/features --profile wip<cr>
 
 function! RunTestFile(...)
   if a:0
