@@ -6,6 +6,7 @@ filetype on
 filetype off
 
 "load pathogen managed plugins
+let loaded_taglist = 'yes'
 call pathogen#infect()
 
 "Use Vim settings, rather then Vi settings (much better!).
@@ -253,17 +254,19 @@ if has("gui_running")
 else
     "dont load csapprox if there is no gui support - silences an annoying warning
     let g:CSApprox_loaded = 1
+    set t_Co=256 " 256 colors
+    set background=dark
 
     "set railscasts colorscheme when running vim in gnome terminal
     if $COLORTERM == 'gnome-terminal'
         set term=gnome-256color
-        colorscheme molokai
+        colorscheme grb256
     else
         if $TERM == 'xterm'
             set term=xterm-256color
-            colorscheme molokai
+            colorscheme grb256
         else
-            colorscheme default
+            colorscheme grb256
         endif
     endif
 endif
@@ -373,7 +376,7 @@ function! s:HighlightLongLines(width)
     endif
 endfunction
 
-" Strip trailing whitespace
+"Strip trailing whitespace
 function! <SID>StripTrailingWhitespaces()
     " Preparation: save last search, and cursor position.
     let _s=@/
@@ -385,7 +388,74 @@ function! <SID>StripTrailingWhitespaces()
     let @/=_s
     call cursor(l, c)
 endfunction
-autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
+
+" automatic removal based on filetypes (from http://vim.wikia.com/wiki/Remove_unwanted_spaces#Automatically_removing_all_trailing_whitespace)
+autocmd BufWritePre *.{rb,erb,rhtml,rake,c,cpp,h,sh} :%s/\s\+$//e
+"autocmd FileType c,cpp,ruby,java,php,perl autocmd BufWritePre <buffer> :%s/\s\+$//e
+
+"find nearest
+"source: http://vim.1045645.n5.nabble.com/find-closest-occurrence-in-both-directions-td1183340.html
+function! FindNearest(pattern)
+  let @/=a:pattern
+  let b:prev = search(a:pattern, 'bncW')
+  if b:prev
+    let b:next = search(a:pattern, 'ncW')
+    if b:next
+      let b:cur = line('.')
+      if b:cur - b:prev == b:next - b:cur
+        " on a match
+      elseif b:cur - b:prev < b:next - b:cur
+        ?
+      else
+        /
+      endif
+    else
+      ?
+    endif
+  else
+    /
+  endif
+endfunction
+command! -nargs=1 FN call FindNearest(<q-args>)
+nmap \ :FN<space>
+
+"Select between conflict blocks
+"select ours
+nmap <leader>so \<<<<<<<<CR>dd/=======<CR>V/>>>>>>><CR>d
+"select theirs
+nmap <leader>st \<<<<<<<<CR>V/=======<CR>dk/>>>>>>><CR>dd
+"find next conflict
+nmap <leader>fc /<<<<<<<<CR>
+
+"save new file with directories creation
+"from http://stackoverflow.com/questions/4292733/vim-creating-parent-directories-on-save
+augroup BWCCreateDir
+  au!
+  autocmd BufWritePre * if expand("<afile>")!~#'^\w\+:/' && !isdirectory(expand("%:h")) | execute "silent! !mkdir -p ".shellescape(expand('%:h'), 1) | redraw! | endif
+augroup END
+
+"BufferExplorer mappings
+nmap <leader>ew :e <C-R>=expand("%:p:h")."/"<CR>
+nmap <leader>es :sp <C-R>=expand("%:p:h")."/"<CR>
+nmap <leader>ev :vsp <C-R>=expand("%:p:h")."/"<CR>
+
+"faster file switching
+nnoremap <leader><leader> <c-^>
+
+"clipboard copy/paste
+map <leader>yy "+yy
+map <leader>pp "+pp
+vnoremap <leader>y "+y
+vnoremap <leader>p "+p
+
+"shortcut to go to the begginning of line
+nmap 0 ^	
+
+"arrow keys are unacceptable
+map <Left> :echo "no! use 'h'"<cr>
+map <Right> :echo "no! use 'l'"<cr>
+map <Up> :echo "no! use 'k'"<cr>
+map <Down> :echo "no! use 'j'"<cr>
 
 "key mapping for window navigation
 map <C-h> <C-w>h
@@ -444,3 +514,116 @@ inoremap <Esc>D <left>
 if has("balloon_eval")
   set noballooneval
 endif
+
+"rename current file
+function! RenameFile()
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'), 'file')
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
+endfunction
+map <leader>n :call RenameFile()<cr>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Ruby test running and show
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! PromoteToLet()
+  :normal! dd
+  " :exec '?^\s*it\>'
+  :normal! P
+  :.s/\(\w\+\) = \(.*\)$/let(:\1) { \2 }/
+  :normal ==
+endfunction
+:command! PromoteToLet :call PromoteToLet()
+:map <leader>p :PromoteToLet<cr>
+
+function! OpenTestAlternate()
+  let new_file = AlternateForCurrentFile()
+  exec ':e ' . new_file
+endfunction
+function! AlternateForCurrentFile()
+  let current_file = expand("%")
+  let new_file = current_file
+  let in_spec = match(current_file, '^spec/') != -1
+  let going_to_spec = !in_spec
+  let in_app = match(current_file, '\<controllers\>') != -1 || match(current_file, '\<models\>') != -1 || match(current_file, '\<views\>') != -1
+  if going_to_spec
+    if in_app
+      let new_file = substitute(new_file, '^app/', '', '')
+    end
+    let new_file = substitute(new_file, '\.rb$', '_spec.rb', '')
+    let new_file = 'spec/' . new_file
+  else
+    let new_file = substitute(new_file, '_spec\.rb$', '.rb', '')
+    let new_file = substitute(new_file, '^spec/', '', '')
+    if in_app
+      let new_file = 'app/' . new_file
+    end
+  endif
+  return new_file
+endfunction
+nnoremap <leader>. :call OpenTestAlternate()<cr>
+
+map <leader>t :call RunTestFile()<cr>
+map <leader>T :call RunNearestTest()<cr>
+map <leader>a :call RunTests('')<cr>
+map <leader>c :w\|:!script/features<cr>
+map <leader>w :w\|:!script/features --profile wip<cr>
+
+function! RunTestFile(...)
+  if a:0
+    let command_suffix = a:1
+  else
+    let command_suffix = ""
+  endif
+
+  " Run the tests for the previously-marked file.
+  if match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\)$') != -1
+    call SetTestFile()
+  elseif !exists("t:grb_test_file")
+    return
+  end
+  call RunTests(t:grb_test_file . command_suffix)
+endfunction
+
+function! RunNearestTest()
+  let spec_line_number = line('.')
+  call RunTestFile(":" . spec_line_number . " -b")
+endfunction
+
+function! SetTestFile()
+  " Set the spec file that tests will be run for.
+  let t:grb_test_file=@%
+endfunction
+
+function! RunTests(filename)
+  " Write the file and run tests for the given filename
+  :w
+  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+  if match(a:filename, '\.feature$') != -1
+    exec ":!script/features " . a:filename
+  else
+    if match(a:filename, '_test.rb$') != -1
+      let cmd = 'ruby'
+    elseif match(a:filename, '_spec.rb$') != -1
+      let cmd = 'spec --color'
+    end
+
+    if filereadable("script/test")
+      exec ":!script/test " . a:filename
+    " elseif filereadable("Gemfile")
+      " exec ":!bundle exec " . cmd . ' ' . a:filename
+    else
+      exec ":!" . cmd . ' ' . a:filename
+    end
+  end
+endfunction
+
