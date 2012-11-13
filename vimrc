@@ -6,8 +6,11 @@ filetype on
 filetype off
 
 "load pathogen managed plugins
-let loaded_taglist = 'yes'
+let loaded_taglist = 'yes' "don't load excuberant ctags
 call pathogen#infect()
+
+"set <leader> key
+let mapleader=","
 
 "Use Vim settings, rather then Vi settings (much better!).
 "This must be first, because it changes other options as a side effect.
