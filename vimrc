@@ -32,6 +32,9 @@ set number      "add line numbers
 set showbreak=...
 set wrap linebreak nolist
 
+"better grep
+set grepprg=ack-grep\ --sort-files
+
 "mapping for command key to map navigation thru display lines instead
 "of just numbered lines
 vmap <D-j> gj
@@ -426,7 +429,7 @@ nmap \ :FN<space>
 "select ours
 nmap <leader>so \<<<<<<<<CR>dd/=======<CR>V/>>>>>>><CR>d
 "select theirs
-nmap <leader>st \<<<<<<<<CR>V/=======<CR>dk/>>>>>>><CR>dd
+nmap <leader>st \<<<<<<<<CR>V/=======<CR>d/>>>>>>><CR>dd
 "find next conflict
 nmap <leader>fc /<<<<<<<<CR>
 
