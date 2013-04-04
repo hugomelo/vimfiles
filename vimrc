@@ -436,6 +436,8 @@ nmap \ :FN<space>
 nmap <leader>so \<<<<<<<<CR>dd/=======<CR>V/>>>>>>><CR>d
 "select theirs
 nmap <leader>st \<<<<<<<<CR>V/=======<CR>d/>>>>>>><CR>dd
+"select both
+nmap <leader>sb \<<<<<<<<CR>dd/=======<CR>dd/>>>>>>><CR>dd
 "find next conflict
 nmap <leader>fc /<<<<<<<<CR>
 
