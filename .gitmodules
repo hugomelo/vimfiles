@@ -199,3 +199,6 @@
 [submodule "bundle/vim-ruby-run"]
 	path = bundle/vim-ruby-run
 	url = https://github.com/stjernstrom/vim-ruby-run
+[submodule "bundle/po.vim"]
+	path = bundle/po.vim
+	url = git://github.com/vim-scripts/po.vim--gray.git
