@@ -202,3 +202,6 @@
 [submodule "bundle/po.vim"]
 	path = bundle/po.vim
 	url = git://github.com/vim-scripts/po.vim--gray.git
+[submodule "bundle/camelcasemotion"]
+	path = bundle/camelcasemotion
+	url = git://github.com/bkad/CamelCaseMotion.git
