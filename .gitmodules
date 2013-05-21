@@ -205,3 +205,6 @@
 [submodule "bundle/camelcasemotion"]
 	path = bundle/camelcasemotion
 	url = git://github.com/bkad/CamelCaseMotion.git
+[submodule "bundle/vim-css3-syntax.git"]
+	path = bundle/vim-css3-syntax.git
+	url = git://github.com/brauliobo/vim-css3-syntax.git
