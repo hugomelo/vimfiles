@@ -47,7 +47,7 @@ set showbreak=...
 set wrap linebreak nolist
 
 "better grep
-set grepprg=ack-grep\ --sort-files
+set grepprg=ack-grep\ --sort-files\ -a
 
 "mapping for command key to map navigation thru display lines instead
 "of just numbered lines
