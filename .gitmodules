@@ -208,3 +208,6 @@
 [submodule "bundle/vim-css3-syntax.git"]
 	path = bundle/vim-css3-syntax.git
 	url = git://github.com/brauliobo/vim-css3-syntax.git
+[submodule "bundle/indent-guides"]
+	path = bundle/indent-guides
+	url = git://github.com/nathanaelkane/vim-indent-guides.git
