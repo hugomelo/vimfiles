@@ -654,3 +654,9 @@ function! RunTests(filename)
   end
 endfunction
 
+function! RemoveControlM()
+  update
+  edit ++ff=dos
+  write
+endfunction
+
