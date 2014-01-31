@@ -47,7 +47,7 @@ set showbreak=...
 set wrap linebreak nolist
 
 "better grep
-set grepprg=ack-grep\ --sort-files\ -a
+set grepprg=ack-grep\ --sort-files
 
 "mapping for command key to map navigation thru display lines instead
 "of just numbered lines
@@ -278,17 +278,7 @@ else
     set background=dark
 
     "set railscasts colorscheme when running vim in gnome terminal
-    if $COLORTERM == 'gnome-terminal'
-        set term=gnome-256color
-        colorscheme grb256
-    else
-        if $TERM == 'xterm'
-            set term=xterm-256color
-            colorscheme grb256
-        else
-            colorscheme grb256
-        endif
-    endif
+    colorscheme railscasts
 endif
 
 " PeepOpen uses <Leader>p as well so you will need to redefine it so something
