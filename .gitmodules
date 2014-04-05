@@ -220,3 +220,6 @@
 [submodule "bundle/jslint"]
 	path = bundle/jslint
 	url = https://github.com/wookiehangover/jshint.vim
+[submodule "bundle/vim-airline"]
+	path = bundle/vim-airline
+	url = https://github.com/bling/vim-airline
