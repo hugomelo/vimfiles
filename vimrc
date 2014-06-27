@@ -650,6 +650,3 @@ function! RemoveControlM()
   write
 endfunction
 
-" leave vim and restore with first files name
-au VimLeave * mksession! ~/.vim/session/%:t.session
-au VimLeave * wviminfo! ~/.vim/session/%:t.viminfo
