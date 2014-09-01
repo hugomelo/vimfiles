@@ -208,6 +208,9 @@ set softtabstop=2
 set expandtab
 set autoindent
 
+"for javascript at preface
+autocmd Filetype javascript set noet ci pi sts=0 ts=4 sw=4
+
 "folding settings
 set foldmethod=indent   "fold based on indent
 set foldnestmax=3       "deepest fold is 3 levels
