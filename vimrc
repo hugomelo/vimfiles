@@ -329,37 +329,6 @@ map <A-k> :cprevious<CR>
 "key mapping for Gundo
 nnoremap <F4> :GundoToggle<CR>
 
-"snipmate setup
-try
-  source ~/.vim/snippets/support_functions.vim
-catch
-  source ~/vimfiles/snippets/support_functions.vim
-endtry
-autocmd vimenter * call s:SetupSnippets()
-function! s:SetupSnippets()
-
-    "if we're in a rails env then read in the rails snippets
-    if filereadable("./config/environment.rb")
-      try
-        call ExtractSnips("~/.vim/snippets/ruby-rails", "ruby")
-        call ExtractSnips("~/.vim/snippets/eruby-rails", "eruby")
-      catch
-        call ExtractSnips("~/vimfiles/snippets/ruby-rails", "ruby")
-        call ExtractSnips("~/vimfiles/snippets/eruby-rails", "eruby")
-      endtry
-    endif
-
-    try
-      call ExtractSnips("~/.vim/snippets/html", "eruby")
-      call ExtractSnips("~/.vim/snippets/html", "xhtml")
-      call ExtractSnips("~/.vim/snippets/html", "php")
-    catch
-      call ExtractSnips("~/vimfiles/snippets/html", "eruby")
-      call ExtractSnips("~/vimfiles/snippets/html", "xhtml")
-      call ExtractSnips("~/vimfiles/snippets/html", "php")
-    endtry
-endfunction
-
 "visual search mappings
 function! s:VSetSearch()
     let temp = @@
@@ -588,68 +557,14 @@ function! AlternateForCurrentFile()
 endfunction
 nnoremap <leader>t. :call OpenTestAlternate()<cr>
 
-map <leader>t :call RunTestFile()<cr>
-map <leader>ta :call RunTests('')<cr>
-map <leader>tc :w\|:!script/features<cr>
-map <leader>tw :w\|:!script/features --profile wip<cr>
-
-function! RunTestFile(...)
-  if a:0
-    let command_suffix = a:1
-  else
-    let command_suffix = ""
-  endif
-
-  " Run the tests for the previously-marked file.
-  if match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\)$') != -1
-    call SetTestFile()
-  elseif !exists("t:grb_test_file")
-    return
-  end
-  call RunTests(t:grb_test_file . command_suffix)
-endfunction
-
-function! RunNearestTest()
-  let spec_line_number = line('.')
-  call RunTestFile(":" . spec_line_number . " -b")
-endfunction
-
-function! SetTestFile()
-  " Set the spec file that tests will be run for.
-  let t:grb_test_file=@%
-endfunction
-
-function! RunTests(filename)
-  " Write the file and run tests for the given filename
-  :w
-  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-  if match(a:filename, '\.feature$') != -1
-    exec ":!script/features " . a:filename
-  else
-    if match(a:filename, '_test.rb$') != -1
-      let cmd = 'ruby'
-    elseif match(a:filename, '_spec.rb$') != -1
-      let cmd = 'spec --color'
-    end
-
-    if filereadable("script/test")
-      exec ":!script/test " . a:filename
-    " elseif filereadable("Gemfile")
-      " exec ":!bundle exec " . cmd . ' ' . a:filename
-    else
-      exec ":!" . cmd . ' ' . a:filename
-    end
-  end
-endfunction
-
 function! RemoveControlM()
   update
   edit ++ff=dos
   write
 endfunction
 
+set pastetoggle=<F2>
+
+inoremap {<cr> {<cr>}<c-o>O<tab>
+inoremap [<cr> [<cr>]<c-o>O<tab>
+inoremap (<cr> (<cr>)<c-o>O<tab>
