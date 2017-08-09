@@ -43,11 +43,14 @@ set incsearch   "find the next match as we type the search
 set hlsearch    "hilight searches by default
 
 set number      "add line numbers
+"toggle number
+nmap <f3> :set number! number?<cr>   
+
 set showbreak=...
 set wrap linebreak nolist
 
 "better grep
-set grepprg=ack-grep\ --sort-files
+set grepprg=ack\ --sort-files
 
 "mapping for command key to map navigation thru display lines instead
 "of just numbered lines
@@ -208,9 +211,6 @@ set softtabstop=2
 set expandtab
 set autoindent
 
-"for javascript at preface
-autocmd Filetype javascript set noet ci pi sts=0 ts=4 sw=4
-
 "folding settings
 set foldmethod=indent   "fold based on indent
 set foldnestmax=3       "deepest fold is 3 levels
@@ -278,10 +278,15 @@ else
     "dont load csapprox if there is no gui support - silences an annoying warning
     let g:CSApprox_loaded = 1
     set t_Co=256 " 256 colors
+    let g:solarized_termcolors=256
+    " set background everywhere instead of only on chars
+    "set term=screen-256color
     set background=dark
 
     "set railscasts colorscheme when running vim in gnome terminal
-    colorscheme railscasts
+    colorscheme spacegray
+    "colorscheme railscasts
+    "colorscheme solarized
 endif
 
 " PeepOpen uses <Leader>p as well so you will need to redefine it so something
@@ -317,8 +322,21 @@ inoremap <M-o>       <Esc>o
 inoremap <C-j>       <Down>
 let g:ragtag_global_maps = 1
 
+"syntastic recommended settings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 "mark syntax errors with :signs
 let g:syntastic_enable_signs=1
+
+"Enable ES6 lint on syntastic
+let g:syntastic_javascript_checkers = ['eslint']
 
 "key mapping for vimgrep result navigation
 map <A-o> :copen<CR>
@@ -565,6 +583,41 @@ endfunction
 
 set pastetoggle=<F2>
 
-inoremap {<cr> {<cr>}<c-o>O<tab>
-inoremap [<cr> [<cr>]<c-o>O<tab>
-inoremap (<cr> (<cr>)<c-o>O<tab>
+" configure snipmate
+let g:snipMate = {}
+let g:snipMate.scope_aliases = {}
+let g:snipMate.scope_aliases['ruby'] = 'ruby,rails,ruby-1.9'
+
+" configure javascript-libraries-syntax
+let g:used_javascript_libs = 'underscore,backbone,jquery,angularjs'
+
+" map W to w  and make life easier
+:command W w
+
+
+"=============== TMUX ADJUSTMENT AREA ==================
+  
+" for tmux to automatically set paste and nopaste mode at the time pasting (as
+" happens in VIM UI)
+ 
+function! WrapForTmux(s)
+  if !exists('$TMUX')
+    return a:s
+  endif
+ 
+  let tmux_start = "\<Esc>Ptmux;"
+  let tmux_end = "\<Esc>\\"
+ 
+  return tmux_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . tmux_end
+endfunction
+ 
+let &t_SI .= WrapForTmux("\<Esc>[?2004h")
+let &t_EI .= WrapForTmux("\<Esc>[?2004l")
+ 
+function! XTermPasteBegin()
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
+endfunction
+ 
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
