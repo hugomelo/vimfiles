@@ -621,3 +621,6 @@ function! XTermPasteBegin()
 endfunction
  
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+
+" puts the caller - from tenderlove
+nnoremap <leader>wtf oputs "#" * 90<c-m>puts caller<c-m>puts "#" * 90<esc>
