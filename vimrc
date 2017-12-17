@@ -611,8 +611,8 @@ function! WrapForTmux(s)
   return tmux_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . tmux_end
 endfunction
  
-let &t_SI .= WrapForTmux("\<Esc>[?2004h")
-let &t_EI .= WrapForTmux("\<Esc>[?2004l")
+"let &t_SI .= WrapForTmux("\<Esc>[?2004h")
+"let &t_EI .= WrapForTmux("\<Esc>[?2004l")
  
 function! XTermPasteBegin()
   set pastetoggle=<Esc>[201~
@@ -620,7 +620,13 @@ function! XTermPasteBegin()
   return ""
 endfunction
  
-inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+"inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+if &term =~ "screen"
+  let &t_BE = "\e[?2004h"
+  let &t_BD = "\e[?2004l"
+  exec "set t_PS=\e[200~"
+  exec "set t_PE=\e[201~"
+endif
 
 " puts the caller - from tenderlove
 nnoremap <leader>wtf oputs "#" * 90<c-m>puts caller<c-m>puts "#" * 90<esc>
