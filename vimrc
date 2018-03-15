@@ -43,6 +43,10 @@ set incsearch   "find the next match as we type the search
 set hlsearch    "hilight searches by default
 
 set number      "add line numbers
+
+" this one below is very important!
+set nostartofline " Don't reset cursor to start of line when moving around
+
 "toggle number
 nmap <f3> :set number! number?<cr>   
 
