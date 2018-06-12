@@ -342,6 +342,10 @@ let g:syntastic_enable_signs=1
 "Enable ES6 lint on syntastic
 let g:syntastic_javascript_checkers = ['eslint']
 
+"Enable vim-sass-lint on syntastic
+let g:syntastic_sass_checkers=["sasslint"]
+let g:syntastic_scss_checkers=["sasslint"]
+
 "key mapping for vimgrep result navigation
 map <A-o> :copen<CR>
 map <A-q> :cclose<CR>
