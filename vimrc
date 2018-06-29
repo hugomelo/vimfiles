@@ -288,9 +288,14 @@ else
     set background=dark
 
     "set railscasts colorscheme when running vim in gnome terminal
-    colorscheme spacegray
+    "colorscheme spacegray
     "colorscheme railscasts
     "colorscheme solarized
+    set termguicolors     " enable true colors support
+    "let ayucolor="light"  " for light version of theme
+    "let ayucolor="mirage" " for mirage version of theme
+    let ayucolor="dark"   " for dark version of theme
+    colorscheme ayu
 endif
 
 " PeepOpen uses <Leader>p as well so you will need to redefine it so something

@@ -256,3 +256,6 @@
 [submodule "bundle/vim-sass-lint"]
 	path = bundle/vim-sass-lint
 	url = https://github.com/gcorne/vim-sass-lint
+[submodule "bundle/auy-vim"]
+	path = bundle/auy-vim
+	url = https://github.com/ayu-theme/ayu-vim
