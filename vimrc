@@ -323,6 +323,9 @@ nnoremap <leader>t :CommandT<CR>
 "map Q to something useful
 noremap Q gq
 
+"delete current file
+nnoremap rmthis :call delete(expand('%')) \| bdelete!<CR>
+
 "make Y consistent with C and D
 nnoremap Y y$
 
@@ -643,3 +646,12 @@ endif
 
 " puts the caller - from tenderlove
 nnoremap <leader>wtf oputs "#" * 90<c-m>puts caller<c-m>puts "#" * 90<esc>
+
+map <leader>: :%s/:(\w+)(\s=>\s)/\1: /gc<CR>
+
+" vim-jsbeautify
+autocmd FileType javascript vnoremap <buffer>  <c-f> :call RangeJsBeautify()<cr>
+autocmd FileType json vnoremap <buffer> <c-f> :call RangeJsonBeautify()<cr>
+autocmd FileType jsx vnoremap <buffer> <c-f> :call RangeJsxBeautify()<cr>
+autocmd FileType html vnoremap <buffer> <c-f> :call RangeHtmlBeautify()<cr>
+autocmd FileType css vnoremap <buffer> <c-f> :call RangeCSSBeautify()<cr>

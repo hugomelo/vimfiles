@@ -259,3 +259,12 @@
 [submodule "bundle/auy-vim"]
 	path = bundle/auy-vim
 	url = https://github.com/ayu-theme/ayu-vim
+[submodule "bundle/vim-jsbeautify"]
+	path = bundle/vim-jsbeautify
+	url = https://github.com/maksimr/vim-jsbeautify.git
+[submodule "bundle/vim-vue"]
+	path = bundle/vim-vue
+	url = https://github.com/posva/vim-vue.git
+[submodule "bundle/vimterial_dark"]
+	path = bundle/vimterial_dark
+	url = https://github.com/larsbs/vimterial_dark.git
